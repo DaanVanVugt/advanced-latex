@@ -9,7 +9,7 @@ header-includes:
   - \usepackage{gitdags}
   - \usepackage{dirtree}
   - \usepackage{listings}
-  - \lstset{language=tex,basicstyle=\footnotesize}
+  - \lstset{language=[LaTeX]{TeX},basicstyle=\footnotesize}
   - \setbeamertemplate{navigation symbols}{}
   - \institute{Eindhoven University of Technology}
 ---
@@ -82,6 +82,7 @@ header-includes:
 \include{tex/appendix}
 \end{document}
 \end{lstlisting}
+\footnote{See also \url{https://en.wikibooks.org/wiki/LaTeX/Modular_Documents}}
 
 ## Example style file {.fragile}
 \begin{lstlisting}
@@ -98,7 +99,7 @@ header-includes:
 
 \usepackage[labelfont=bf,textfont=it]{caption} % pretty captions
 \usepackage{siunitx}
-\sisetup{seperr} % seperate the error from the number with a +- sign
+\sisetup{seperr} % seperate the error from the number
 \end{lstlisting}
 
 ## Example style file (2) {.fragile}
@@ -124,33 +125,69 @@ header-includes:
 
 
 # Version control and collaboration
+## Options for collaborating on LaTeX documents
+* Online editors: Overleaf / Authorea / Sharelatex
+* Dropbox
+* Version control: Git / Mercurial / SVN
+\footnote{See also: \url{https://en.wikibooks.org/wiki/LaTeX/Collaborative_Writing_of_LaTeX_Documents}}
+
 ## Version control
-* Absolute necessity when collaborating on code
-* Extremely useful for personal projects also
-* Avoid files like analysis_v3_Daan_FINAL_2.m
-* Use history to find bugs faster
-* Automatic external backup when using remotes
+* Absolute necessity when working with code
+* Extremely useful for LaTeX as well
+* Easily view changes between versions
+* Go backwards and forwards in history
+* Steep learning curve
+* Online backup when using GitLab
 
 ## Git
 * Most popular version control system
 * Git manages changes to a tree of files over time
-* Excellent integration with many sites and services (Github, GitLab, Bitbucket)
+* Excellent integration with many sites and services (Github, GitLab\footnote{TU/e GitLab system coming soon!}, Bitbucket)
 
-## How does it work?
+## How does it work? {.fragile}
+\begin{columns}[T]
+\begin{column}{.20\textwidth}
 \begin{figure}
   \begin{tikzpicture}
-  \path[use as bounding box] (0,-2.5) rectangle(10.5,2.5);
   \gitDAG[grow right sep = 2em]{ A };
   \end{tikzpicture}
 \end{figure}
+\end{column}%
+\hfill%
+\begin{column}{.78\textwidth}
+\begin{lstlisting}
+commit cc9e12aa996cb4b098a10387ad5c812264bdba38
+Author: Daan van Vugt <daanvanvugt@gmail.com>
+Date:   Fri Sep 11 18\:18\:14 2015 +0200
 
-## Creating commits
+    create initial version of gradB paper, derivation of theta only
+
+ .gitignore   |   5 ++
+ Makefile     |  31 ++++++++++++
+ gradB.tex    | 120 ++++++++++++++++++++++++++++++++++++++++++++++
+ img/Makefile |  22 +++++++++
+ img/theta.nb | 332 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 510 insertions(+)
+\end{lstlisting}
+\end{column}%
+\end{columns}
+
+## Creating commits {.fragile}
 \begin{figure}
   \begin{tikzpicture}
-  \path[use as bounding box] (0,-2.5) rectangle(10.5,2.5);
   \gitDAG[grow right sep = 2em]{ A -- B };
   \end{tikzpicture}
 \end{figure}
+\begin{lstlisting}
+commit d945fe54d01f758e0e035f026f8c17fe05d4766a
+Author: Daan van Vugt <daanvanvugt@gmail.com>
+Date:   Mon Sep 21 15\:15\:37 2015 +0200
+
+    add graph of tanh behaviour
+
+ gradB.tex | 59 ++++++++++++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 42 insertions(+), 17 deletions(-)
+\end{lstlisting}
 
 ## Branches and tags
 \begin{figure}
