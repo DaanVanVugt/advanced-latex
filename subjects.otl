@@ -1,0 +1,41 @@
+(re)newcommand
+new packages
+editor/online
+layout
+	page margins
+environments
+	lists
+	tables
+	figures
+	equations
+	code
+Floats
+	Pictures
+	Figures
+		Gnuplot cairolatex
+		Tikz
+			matlab2tikz
+		pgfplots
+	Diagrams
+		Inkscape latex export
+beamer
+poster
+fonts
+bibliography
+	Mendeley/others
+Automation
+	Make
+	Latexmk
+Document structure
+PDF integration
+	Hyperred
+	pdfsync
+	videos
+Multi-author writing
+Versioning
+Spell-checking
+Debugging errors
+	Understanding the run log
+Others
+	excel to latex
+	detexify
