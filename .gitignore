@@ -9,3 +9,6 @@ img/tikz
 *.toc
 *.zip
 *.pdf
+*.tex
+*.tmp
+*.vrb

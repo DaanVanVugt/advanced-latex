@@ -6,10 +6,20 @@ date: May 31, 2016
 classoption: aspectratio=169
 theme: metropolis
 header-includes:
+  - \makeatletter
+  - \let\RequirePackage\original@RequirePackage
+  - \let\usepackage\RequirePackage
+  - \makeatother
+  - \usepackage{mhchem}
+  - \usepackage{tikz}
   - \usepackage{gitdags}
   - \usepackage{dirtree}
   - \usepackage{listings}
-  - \lstset{language=[LaTeX]{TeX},basicstyle=\footnotesize}
+  - \usepackage{xcolor-solarized}
+  - \usepackage{graphicx}
+  - \usepackage{booktabs}
+  - \graphicspath{{images/}}
+  - \lstset{language=[LaTeX]{TeX},basicstyle=\footnotesize, keywordstyle=\color{solarized-blue}, commentstyle=\color{solarized-red}}
   - \setbeamertemplate{navigation symbols}{}
   - \institute{Eindhoven University of Technology}
 ---
@@ -189,17 +199,18 @@ Date:   Mon Sep 21 15\:15\:37 2015 +0200
  1 file changed, 42 insertions(+), 17 deletions(-)
 \end{lstlisting}
 
-## Branches and tags
+## Creating commits (2) {.fragile}
+\begin{lstlisting}[language=bash]
+git init . # Create the repository (.git directory)
+git add document.tex tex/ img/ Makefile .gitignore mytue.sty # Add all files
+git commit # Commits the first version. You will be asked to write a short description
+\end{lstlisting}
+
+## Branches
 \begin{figure}
   \begin{tikzpicture}
   \path[use as bounding box] (0,-2.5) rectangle(10.5,2.5);
   \gitDAG[grow right sep = 2em]{ A -- B };
-  % Tag reference
-  \gittag
-  [v0p1]       % node name
-  {v0.1}       % node text
-  {above=of A} % node placement
-  {A}          % target
   % Branch
   \gitbranch
   {master}     % node name and text
@@ -217,12 +228,6 @@ Date:   Mon Sep 21 15\:15\:37 2015 +0200
   \begin{tikzpicture}
   \path[use as bounding box] (0,-2.5) rectangle(10.5,2.5);
   \gitDAG[grow right sep = 2em]{ A -- B };
-  % Tag reference
-  \gittag
-  [v0p1]       % node name
-  {v0.1}       % node text
-  {above=of A} % node placement
-  {A}          % target
   % Branch
   \gitbranch
   {master}     % node name and text
@@ -232,13 +237,29 @@ Date:   Mon Sep 21 15\:15\:37 2015 +0200
   \gitremotebranch
   {origin/master} % node name and text
   {above=of master} % node placement
-  {master}
-  % HEAD reference
-  \gitHEAD
-  {above=of origin/master} % node placement
-  {origin/master}          % target
+  {master} % target
+
+  \node[DAGref, fill = solarized-blue!20] (origin) at (8,2) {origin};
+  \node[DAGref, fill = yellow!30] (me) at (7,0) {me};
+  \node[DAGref, fill = yellow!30] (sam) at (9,0) {sam};
+  \draw[DAGedge] (origin) -- (me);
+  \draw[DAGedge] (origin) -- (sam);
   \end{tikzpicture}
 \end{figure}
+
+## Remotes and collaboration (2) {.fragile}
+\begin{lstlisting}[language=bash]
+git remote add origin git@github.com/Exteris/git-for-scientists.git # Create a remote
+git push origin master # Push our master branch to origin
+git pull # Get new changes from origin/master and merge them into our master branch
+... # Do some work
+git add * # add it
+git commit # Create a new commit
+... # Do more work
+git add * # add it
+git commit # Create a new commit
+git push # Push this commit to origin
+\end{lstlisting}
 
 ## Conflicts
 \begin{figure}
@@ -247,27 +268,23 @@ Date:   Mon Sep 21 15\:15\:37 2015 +0200
   \gitDAG[grow right sep = 2em]{
   A -- B -- { C, D -- E, }
   };
-  % Tag reference
-  \gittag
-  [v0p1]       % node name
-  {v0.1}       % node text
-  {above=of A} % node placement
-  {A}          % target
   % Remote branch
   \gitremotebranch
   [origmaster]    % node name
   {origin/master} % node text
   {above=of C}    % node placement
   {C}             % target
+  % Remote branch
+  \gitremotebranch
+  [sammaster]    % node name
+  {sam/master} % node text
+  {above=of origmaster}    % node placement
+  {origmaster}             % target
   % Branch
   \gitbranch
   {master}     % node name and text
   {above=of E} % node placement
   {E}          % target
-  % HEAD reference
-  \gitHEAD
-  {above=of master} % node placement
-  {master}          % target
   \end{tikzpicture}
 \end{figure}
 
@@ -278,79 +295,308 @@ Date:   Mon Sep 21 15\:15\:37 2015 +0200
   \gitDAG[grow right sep = 2em]{
   A -- B -- { C, D -- E} -- F
   };
-  % Tag reference
-  \gittag
-  [v0p1]       % node name
-  {v0.1}       % node text
-  {above=of A} % node placement
-  {A}          % target
   % Remote branch
   \gitremotebranch
   [origmaster]    % node name
   {origin/master} % node text
   {above=of C}    % node placement
   {C}             % target
+  % Remote branch
+  \gitremotebranch
+  [sammaster]    % node name
+  {sam/master} % node text
+  {above=of origmaster}    % node placement
+  {origmaster}             % target
   % Branch
   \gitbranch
   {master}     % node name and text
   {above=of F} % node placement
   {F}          % target
-  % HEAD reference
-  \gitHEAD
-  {above=of master} % node placement
-  {master}          % target
   \end{tikzpicture}
 \end{figure}
 
 
-## What can I use it for?
-Anything text-based!
-
-* Code (MATLAB example follows)
-* Papers (Example with Overleaf later)
-* Presentations (like this one, see source at \url{https://github.com/exteris/git-for-scientists})
-
-## How to use git with your MATLAB project
-* Install git, \url{https://git-scm.com/downloads}
-* Include git.m in your project, \url{https://github.com/slayton/matlab-git}
-* Create a repository with `git init`
-* Stage your files with `git add *.m`
-* Create your first commit with `git commit -m "Commit message"`
-
-## How to use git to collaborate on papers
-Using Overleaf (only free online editor with unlimited private projects)
-
-1. Create a Project on Overleaf
-2. Find the Git Link for your Project (share link, www $\to$ git)
-3. Clone your Project with Git
-4. Edit your Project and Commit your Changes
-5. Push your Changes to Overleaf
-
-\tiny{Steps from \url{https://www.overleaf.com/blog/195}}
-
 ## How can I learn it?
-1. 15 minute tutorial: \url{https://try.github.io}
-2. Just Try It\texttrademark{} and google or ask if you have any problems
+* 15 minute tutorial: \url{https://try.github.io} (we will do this later)
 
 Other resources:
 
 * \url{http://nyuccl.org/pages/gittutorial/}
-* A Quick Introduction to Version Control with Git and GitHub, PLoS Computational Biology, doi:10.1371/journal.pcbi.1004668 (copies available after the talk)
+* A Quick Introduction to Version Control with Git and GitHub, PLoS Computational Biology, doi:10.1371/journal.pcbi.1004668
+* Hundreds of other git tutorials online
+
 
 # Citations and reference managers
+## Referencing literature in LaTeX
+* Store references in a database (file.bib)
+* Cite these references in a LaTeX document
+* Always cite in the same style
+* Commands for printing bibliography
+* Usual in physics: [1], [2], [3-5]: AIP, ACS and IEEE styles
+
+## Referencing literature in LaTeX with BibTex {.fragile}
+\begin{columns}[T]
+\begin{column}{.48\textwidth}
+\begin{lstlisting}
+\usepackage[natbib]{biblatex}
+\addbibresource{references.bib}
+
+\begin{document}
+\citet{Huysmans2007} % text-style citation
+\cite{Huysmans2007}
+
+\printbibliography{}
+\end{lstlisting}
+\end{column}%
+\hfill%
+\begin{column}{.48\textwidth}
+\begin{lstlisting}
+@article{Huysmans2007,
+author = {Huysmans, G.T.A. and Czarny, O.},
+doi = {10.1088/0029-5515/47/7/016},
+issn = {0029-5515},
+journal = {Nucl. Fusion},
+number = {7},
+pages = {659--666},
+title = {{MHD stability in X-point geometry:
+simulation of ELMs}},
+volume = {47},
+year = {2007}
+}
+\end{lstlisting}
+\end{column}%
+\end{columns}
+
+## Using reference managers
+![Mendeley Desktop](mendeley.png)
+
+## Options for reference managers
+* Mendeley
+* Paperpile
+* Zotero
+* Jabref
+* Endnote
+* Papership
+
+Most of these can export BibTex files of your entire library
 
 # Miscellaneous
-## (Re)newcommand
-## Units
-## Chemical formulas
+## (Re)newcommand {.fragile}
+Save yourself work by making commands for often-used symbols\footnote{See also: \url{https://en.wikibooks.org/wiki/LaTeX/Macros} for loops and conditionals}
+
+\begin{lstlisting}
+% Syntax: \(re)newcommand{cmd}[args][opt]{def}
+% args = num arguments
+% opt = optional default value for first argument
+% def = text to expand
+% examples:
+\newcommand{\dd}[3][\mathrm{d}]{\frac{{#1}{#2}}{{#1}{#3}}} % derivatives
+\newcommand{\e}[1]{\ensuremath{\cdot10^{#1}}} % exponents
+\newcommand\bf[1]{\mathbf{#1}}
+\newcommand{\dt}{{\Delta}t}
+\renewcommand{\d}{\mathrm{d}}
+\renewcommand{\b}[1]{\mathbf{#1}}
+\newcommand{\B}{\mathbf{B}}
+\end{lstlisting}
+
+## Units with siunitx {.fragile}
+* Pretty-print units
+* Handles lists and errors as well
+
+\begin{lstlisting}
+\usepackage{siunitx}
+
+\num{1+-2i} % 1 \pm 2i
+\num{.3e45} % 0.3 * 10^45
+\si{kg.m.s^{-1}}
+\si{\kilogram\metre\per\second} % kg m s^-1
+\SIlist{0.12;0.67;0.80}{\milli\metre} % 0.12 mm, 0.67 mm and 0.80 mm
+\end{lstlisting}
+
+See \url{http://ftp.snt.utwente.nl/pub/software/tex/macros/latex/contrib/siunitx/siunitx.pdf} for more info
+
+## Chemical formulas with mhchem {.fragile}
+* Typeset chemical formulae and equations easily
+* Handles charges as well
+
+\ce{CO2 + C -> 2 CO}\hfill\verb|\ce{C02 + C -> 2 CO}|
+
+\ce{Sb2O3}\hfill\verb|\ce{Sb2O3}|
+
+\ce{Y^99+}\hfill\verb|\ce{Y^99+}|
+
+See \url{http://ftp.snt.utwente.nl/pub/software/tex/macros/latex/contrib/mhchem/mhchem.pdf} for more info
+
 ## Symbols
-## Pretty equations
+* Nice symbol list on \url{http://web.ift.uib.no/Teori/KURS/WRK/TeX/symALL.html}
+* Detexify can recognize handwritten symbols: \url{http://detexify.kirelabs.org}
+
+## Pretty equations {.fragile}
+* Bracket balancing: use \verb|\left| and \verb|\right|. Example:
+
+$(a+\frac{b^2}{c_j})d = \left(a+\frac{b^2}{c_j}\right)d$
+
+* Use operators when possible (such as cos and exp)
+* Use \verb|\align| for multiline equations
+* Use \verb|\text| when adding words in equations and \verb|~| or \verb|\quad| for spacing
+
+$50~apples < 51\quad\text{apples}$
+
+* Read \url{https://en.wikibooks.org/wiki/LaTeX/Mathematics} for a full list and \url{https://en.wikibooks.org/wiki/LaTeX/Advanced_Mathematics} for even more
+
 ## PDF tricks
+* hyperref package for links in pdf
+* cmap package for better copying
+* pdfpages package for including pages of other pdfs
+
 
 # Try it yourself
+## Exercises
+1. Clean up your own document (or \url{http://daanvanvugt.nl/files/doc-mess.zip}) for directory structure, style file and includes
+2. Try git at \url{https://try.github.io} if you are new to git
+3. Add citations to your document (don't forget to commit)
+4. Try to find 3 or more instances where a newcommand could simplify your document and add those (+commit)
+5. Use the siunitx package for physical units and errors
+6. Try mhchem if you have any element names
+7. Look for your ugliest equation and make it easier on the eyes (+commit)
 
 # -- Break --
 
-# Diagrams, graphs, code and tables
+## Agenda
+\tableofcontents
+
+# Diagrams, graphs, tables and code
+## Floats {.fragile}
+* Containers of things that cannot be broken over a page: table, figure
+* Positioning these can be tricky. Let LaTeX do it for you!
+* See \url{https://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions} for info on floats
+
+\begin{lstlisting}
+\begin{figure}[htbp] % optional placement specifier
+\includegraphics[width=\textwidth]{tokamak.png}
+\caption{A tokamak fusion reactor}
+\label{fig:tokamak}
+\end{figure}
+\end{lstlisting}
+
+## Pretty (easy) tables {.fragile}
+\begin{columns}%
+\begin{column}{0.48\textwidth}
+\begin{lstlisting}
+\begin{tabular}{lllr}
+\hline
+0 & 1 & 2 & 3 \\ \hline
+a & b & c & d \\
+a & b & c & d \\\hline
+\end{tabular}
+\end{lstlisting}
+\end{column}%
+\hfill
+\begin{column}{0.48\textwidth}
+\begin{tabular}{lllr}
+\hline
+0 & 1 & 2 & 3 \\ \hline
+a & b & c & d \\
+a & b & c & d \\\hline
+\end{tabular}
+\end{column}%
+\end{columns}
+### Packages:
+* Booktabs package for pretty tables
+* Langtable package for multi-page tables
+* Use \url{http://www.tablesgenerator.com/} to make things easier
+* Excel2latex also works up to Excel 2010
+
+## Drawing diagrams with tikz {.fragile}
+* Very powerful package for drawing diagrams
+* All diagrams in this presentation are in tikz
+* \verb|\usepackage{tikz}| first
+
+\begin{columns}%
+\begin{column}{0.48\textwidth}
+\begin{lstlisting}
+\begin{tikzpicture}
+\draw[gray, thick] (-1,2) -- (2,-4);
+\draw[gray, thick] (-1,-1) -- (2,2);
+\filldraw[black] (0,0) circle (2pt)
+  node[anchor=west] {Intersection point};
+\end{tikzpicture}
+\end{lstlisting}
+\end{column}%
+\hfill
+\begin{column}{0.48\textwidth}
+\begin{tikzpicture}
+\draw[gray, thick] (-1,2) -- (2,-4);
+\draw[gray, thick] (-1,-1) -- (2,2);
+\filldraw (0,0) circle (2pt)
+  node[anchor=west] {Intersection point};
+\end{tikzpicture}
+\end{column}%
+\end{columns}
+
+## Drawing diagrams with tikz (2) {.fragile}
+\begin{columns}%
+\begin{column}{0.48\textwidth}
+\begin{lstlisting}
+\begin{tikzpicture}
+\fill[blue!50] (2.0,0) ellipse (1.0 and 0.5);
+\filldraw[color=red!60, fill=red!5](-1,0) circle (1.0);
+\draw[ultra thick, ->] (1.5,-3) arc (0:220:1);
+\end{tikzpicture}
+\end{lstlisting}
+\end{column}%
+\hfill
+\begin{column}{0.48\textwidth}
+\begin{tikzpicture}
+\fill[blue!50] (2.0,0) ellipse (1.0 and 0.5);
+\filldraw[color=red!60, fill=red!5](-1,0) circle (1.0);
+\draw[ultra thick, ->] (1.5,-2.5) arc (0:220:1);
+\end{tikzpicture}
+\end{column}%
+\end{columns}
+
+See \url{https://nl.sharelatex.com/learn/TikZ_package} and many other pages about tikz
+
+Especially \url{http://www.texample.net/tikz/examples/} contains many nice examples
+
+
+## Tikz basics {.fragile}
+### Drawing
+* \verb|\draw|, \verb|\filldraw| and \verb|\fill| do what you expect
+* \verb|\draw[options] (A) - (B) - (C);| draws a line from A to B to C
+* \verb|\draw[options] (A) ellipse (1.0 and 0.5);| draws an ellipse centered on A
+
+### Positions
+* Positions can be given as coordinates (in units of 1cm), or as named points, or relative coordinates
+* \verb|\path (x,y) coordinate (A);| assigns a coordinate to A
+* \verb|\path (A) ++(dx,dy) coordinate (B);| assigns a relative coordinate to B
+
+
+## Tikz basics (2) {.fragile}
+### Options
+* \verb|color=<color name>|, \verb|line width=<dimension>|, \verb|dash pattern=<pattern>|
+* \verb|fill=<color name>|, \verb|rounded corners| and many more
+
+### Nodes
+* Nodes contain shape and text
+* \verb|\path (0,0) node[draw,shape=circle] (v0) {$v_0$};| define a node named v0 with text $v_0$, drawn within a circle
+
+### Further reading
+See \url{https://en.wikibooks.org/wiki/LaTeX/PGF/TikZ} and \url{https://www.tug.org/pracjourn/2007-1/mertz/mertz.pdf}
+
+
+## Drawing diagrams with inkscape
+![Inkscape](inkscape.png)
+
+## Exporting from inkscape to LaTeX
+* Awesome vector graphics editor $\rightarrow$ nice images in your documents
+* You can use $$ and LaTeX commands in inkscape text and it will be rendered by LaTeX
+* Save a document as LaTeX + PSTricks macros
+* Input the .tex document created by inkscape while in a figure environment
+
+
+## Plotting with PGFplots {.fragile}
+pass
+
 # Presentations and posters
 # Try it yourself
