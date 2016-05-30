@@ -13,12 +13,15 @@ header-includes:
   - \usepackage{mhchem}
   - \usepackage{tikz}
   - \usepackage{tikzpagenodes}
+  - \usepackage{pgfplots}
+  - \pgfplotsset{width=\textwidth,compat=newest}
   - \usepackage{gitdags}
   - \usepackage{dirtree}
   - \usepackage{listings}
   - \usepackage{xcolor-solarized}
   - \usepackage{graphicx}
   - \usepackage{booktabs}
+  - \usepackage{gnuplottex}
   - \graphicspath{{images/}}
   - \lstset{language=[LaTeX]{TeX},basicstyle=\footnotesize, keywordstyle=\color{solarized-blue}, commentstyle=\color{solarized-red}}
   - \setbeamertemplate{navigation symbols}{}
@@ -318,7 +321,7 @@ git push # Push this commit to origin
 
 
 ## How can I learn it?
-* 15 minute tutorial: \url{https://try.github.io} (we will do this later)
+* 15 minute tutorial: \url{https://try.github.io}
 
 Other resources:
 
@@ -448,13 +451,17 @@ $50~apples < 51\quad\text{apples}$
 
 # Try it yourself
 ## Exercises
-1. Clean up your own document (or \url{http://daanvanvugt.nl/files/doc-mess.zip}) for directory structure, style file and includes
+1. Clean up your document (or \url{http://daanvanvugt.nl/files/latex/doc-mess.zip}) for directory structure, style file and includes
 2. Try git at \url{https://try.github.io} if you are new to git
-3. Add citations to your document (don't forget to commit)
+3. Add citations to your document and try a reference manager (don't forget to commit)
 4. Try to find 3 or more instances where a newcommand could simplify your document and add those (+commit)
 5. Use the siunitx package for physical units and errors
 6. Try mhchem if you have any element names
 7. Look for your ugliest equation and make it easier on the eyes (+commit)
+8. Drink coffee and relax
+9. Optional: ask me questions about other issues you have with LaTeX
+
+\footnote{Find this presentation at \url{http://daanvanvugt.nl/files/latex/presentation-part1.pdf}}
 
 # -- Break --
 
@@ -502,9 +509,9 @@ $50~apples < 51\quad\text{apples}$
 \item \verb|\documentclass[a1plus,blue]{fusposter}|
 \item \verb|\topline{Name of event}|
 \item \verb|\botline{Location --- Date}|
-\item \verb|\department{Department of Applied Physics \hfill Contact: email}|
+\item \verb|\department{Department of Applied Physics}|
 \item \verb|\title{Title}|
-\item \verb|\author{Authors \\ {\small \textit{Eindhoven University of Technology}}|
+\item \verb|\author{Authors...}|
 \item Use \verb|\otherlogos{}| to set more logos
 \end{itemize}
 \end{column}%
@@ -551,6 +558,16 @@ a & b & c & d \\\hline
 * Langtable package for multi-page tables
 * Use \url{http://www.tablesgenerator.com/} to make things easier
 * Excel2latex also works up to Excel 2010
+
+## Including source code in documents {.fragile}
+* Easy to do with \verb|\usepackage{listings}|
+* Another option: \verb|\usepackage{minted}| (more difficult to run)
+* Use: \verb|\begin{lstlisting} CODE \end{lstlisting}|
+* Set options with \verb|\lstset{language=[LaTeX]{TeX}}|
+* Other options: \verb|basicstyle=\footnotesize|
+* \verb|keywordstyle=\color{blue}, commentstyle=\color{red}|
+* Don't forget to include the git commit hash
+* Read from a file: \verb|\lstinputlisting[language=Python]{source_filename.py}|
 
 ## Drawing diagrams with tikz {.fragile}
 * Very powerful package for drawing diagrams
@@ -641,12 +658,45 @@ See \url{https://en.wikibooks.org/wiki/LaTeX/PGF/TikZ} and \url{https://www.tug.
 
 
 ## Plotting with PGFplots {.fragile}
-pass
+\input{3dplot}
 
-## Matlab2tikz
-pass
-## Gnuplot
-pass
+## PGFplots resources
+* \url{https://nl.sharelatex.com/learn/Pgfplots_package} for a good introduction
+* \url{http://pgfplots.sourceforge.net/gallery.html} for many examples
+
+## Matlab2tikz {.fragile}
+* Create beautiful tikz plots from your matlab figures
+* 4.9/5 stars on Mathworks file exchange
+* \url{https://github.com/matlab2tikz/matlab2tikz}
+* Create your plots in matlab, then call \verb|matlab2tikz('filename', 'height', '\figureheight', 'width', '\figurewidth');|\footnote{See \url{http://www.howtotex.com/packages/beautiful-matlab-figures-in-latex/} for a very simple tutorial}
+
+## Matlab2tikz examples {.fragile}
+\resizebox{!}{8cm}{\input{plots/tex/graphs/compare_psi.tex}}
+
+
+## Gnuplot {.fragile}
+\begin{figure}
+\begin{gnuplot}[terminal=cairolatex,terminaloptions=color]
+plot [0:2*pi] sin(x) title 'Sine', cos(x) title 'Cosine'
+\end{gnuplot}
+\end{figure}
+
+## Source for gnuplot example {.fragile}
+\begin{lstlisting}
+\begin{gnuplot}[terminal=cairolatex,terminaloptions=color]
+plot [0:2*pi] sin(x) title 'Sine', cos(x) title 'Cosine'
+\end{gnuplot}
+\end{lstlisting}
 
 
 # Try it yourself
+## Exercises
+1. Create a simple presentation and/or poster and put your equations and sections on it
+2. Create a smiley in tikz, compile it in a simple document and email it to <daanvanvugt@gmail.com>
+3. Draw a simple tokamak using tikz and put it on your slides (+commit of course)
+4. Plot a gaussian with pgfplots and put it on your slides
+5. Download \url{http://daanvanvugt.nl/files/latex/plots.zip} and play with the examples
+6. \textsc{MATLAB} users only: try recreating one of the plots from 5. with matlab2tikz
+7. Make annotations in your graph with tikz
+
+\footnote{Find this presentation at \url{http://daanvanvugt.nl/files/latex/presentation-full.pdf}}
