@@ -12,6 +12,7 @@ header-includes:
   - \makeatother
   - \usepackage{mhchem}
   - \usepackage{tikz}
+  - \usepackage{tikzpagenodes}
   - \usepackage{gitdags}
   - \usepackage{dirtree}
   - \usepackage{listings}
@@ -102,7 +103,7 @@ header-includes:
 
 \usepackage[english]{babel}
 \usepackage{amsmath} % for eqref, multline
-\usepackage[pdfusetitle]{hyperref}
+\usepackage[pdfusetitle]{hyperref} % links in your pdf
 \usepackage{booktabs} % pretty tables
 \usepackage{graphicx}
 \graphicspath{{./img/}} 
@@ -444,11 +445,6 @@ $50~apples < 51\quad\text{apples}$
 
 * Read \url{https://en.wikibooks.org/wiki/LaTeX/Mathematics} for a full list and \url{https://en.wikibooks.org/wiki/LaTeX/Advanced_Mathematics} for even more
 
-## PDF tricks
-* hyperref package for links in pdf
-* cmap package for better copying
-* pdfpages package for including pages of other pdfs
-
 
 # Try it yourself
 ## Exercises
@@ -465,6 +461,55 @@ $50~apples < 51\quad\text{apples}$
 ## Agenda
 \tableofcontents
 
+# Presentations and posters
+## The beamer package {.fragile}
+* Use as \verb|\documentclass{beamer}| (with options like \verb|aspectratio=169|)
+* Use \verb|\begin{frame}| and \verb|\frametitle{title}| to make slides and titles
+* Compiles to a pdf
+* Beamer themes can be used for styling. See \url{https://www.hartwork.org/beamer-theme-matrix/} for many many themes
+* Mtheme is also pretty (this theme)
+* See \url{https://en.wikibooks.org/wiki/LaTeX/Presentations} for more info
+
+## Including movies in beamer presentations {.fragile}
+\begin{lstlisting}
+\usepackage{multimedia}
+\newcommand{\fullframe}[1]{\begin{tikzpicture}[remember picture,overlay]
+        \node[at=(current page.center)]{#1};
+    \end{tikzpicture}}
+\newcommand{\fullmovie}[1]{\fullframe{\movie[autostart,loop,externalviewer]{
+    \includegraphics[width=\paperwidth]{#1.png}}{videos/#1.mkv}}}
+\newcommand\blackbg{\textcolor{\black}{\rule{\paperwidth}{\paperheight}}}
+
+% in your begin{frame}[plain]
+\fullmovie{jet_plane_cut_marked}
+\end{lstlisting}
+
+## Poster templates (1)
+![Beamerposter package groups some slides together](beamerposter.png)
+
+## Poster templates (2) {.fragile}
+\begin{columns}
+\begin{column}{.40\textwidth}
+\begin{tikzpicture}[remember picture, overlay]
+\node[anchor=south west] at (current page.south west) {\includegraphics[height=0.9\paperheight]{fusionday.pdf}};
+\end{tikzpicture}
+\end{column}%
+\hfill%
+\begin{column}{.60\textwidth}
+\begin{itemize}
+\item TU/e style science posters using a documentclass
+\item fusposter.cls at \url{http://daanvanvugt.nl/files/latex/fusposter.zip}
+\item \verb|\documentclass[a1plus,blue]{fusposter}|
+\item \verb|\topline{Name of event}|
+\item \verb|\botline{Location --- Date}|
+\item \verb|\department{Department of Applied Physics \hfill Contact: email}|
+\item \verb|\title{Title}|
+\item \verb|\author{Authors \\ {\small \textit{Eindhoven University of Technology}}|
+\item Use \verb|\otherlogos{}| to set more logos
+\end{itemize}
+\end{column}%
+\end{columns}
+
 # Diagrams, graphs, tables and code
 ## Floats {.fragile}
 * Containers of things that cannot be broken over a page: table, figure
@@ -473,7 +518,7 @@ $50~apples < 51\quad\text{apples}$
 
 \begin{lstlisting}
 \begin{figure}[htbp] % optional placement specifier
-\includegraphics[width=\textwidth]{tokamak.png}
+\includegraphics[width=\textwidth]{tokamak.pdf}
 \caption{A tokamak fusion reactor}
 \label{fig:tokamak}
 \end{figure}
@@ -598,5 +643,10 @@ See \url{https://en.wikibooks.org/wiki/LaTeX/PGF/TikZ} and \url{https://www.tug.
 ## Plotting with PGFplots {.fragile}
 pass
 
-# Presentations and posters
+## Matlab2tikz
+pass
+## Gnuplot
+pass
+
+
 # Try it yourself
